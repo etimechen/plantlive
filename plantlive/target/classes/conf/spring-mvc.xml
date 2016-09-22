@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+	http://www.springframework.org/schema/websocket
+	http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
+	
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/resources/**" location="/resources/*"/>
+
+	<!-- 扫描controller（controller层注入） -->
+	<context:component-scan base-package="com.etimechen.controller"/>
+	<context:component-scan base-package="com.etimechen.component"/>
+	<context:component-scan base-package="com.etimechen.websocket"/>	
+	<bean id="websocket" class="com.etimechen.websocket.MyWebSocketHandle"/>
+	<websocket:handlers>  
+		<websocket:mapping path="/websocket" handler="websocket"/>  
+		<websocket:handshake-interceptors>  
+			<bean class="com.etimechen.websocket.HandshakeInterceptor"/>  
+		</websocket:handshake-interceptors>  
+	</websocket:handlers> 
+	<!-- json -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list >
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<mvc:default-servlet-handler />
+	<!-- 对模型视图添加前后缀 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/" p:suffix=".jsp"/>
+</beans>

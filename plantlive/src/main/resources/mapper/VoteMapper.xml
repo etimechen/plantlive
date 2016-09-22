@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etimechen.dao.IVoteDao">
+	<!-- 根据日期和IP统计投票数 -->
+	<select id="selectCountByDateAndIp" resultMap="java.lang.Integer" parameterType="java.util.Map">
+		select 
+			count(*) 
+		from 
+			vote 
+		where 
+			votedate = #{votedate,jdbcType=DATE} 
+		and 
+			voteip = INET_ATON(#{voteip,jdbcType=VARCHAR})
+	</select>
+	<insert id="insert" parameterType="java.util.Map">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+         insert into vote
+         	(  
+         	voteyesorno,
+         	voteip,
+         	votedate) 
+         values 
+         	(        
+         	#{voteyesorno},
+         	#{voteip},
+         	#{votedate})
+	</insert>
+</mapper>
