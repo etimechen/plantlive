@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -25,17 +26,14 @@ public class VoteTest {
 	@Test
 	public void vote(){
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("voteyesorno", 1);
-		paramMap.put("voteip", Long.valueOf("3232235779"));
-		paramMap.put("votedate", "2016-09-17");
-		System.out.println(voteService.insertVote(paramMap));
-		System.out.println(paramMap);
+//		voteService.insertVote(paramMap);
 	}
 	
 	@Test
+	@Ignore
 	public void test(){
 		
-			//System.out.println(Hex.encodeHex(null));
+		System.out.println("Test Ignore");
 
 	}
 }

@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
 
-	private static final Logger logger = Logger.getLogger(Initializer.class);
+	private static final Logger LOGGER = Logger.getLogger(Initializer.class);
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		// TODO Auto-generated method stub
-		logger.debug("所有bean加载完成,初始化config.properties全局变量");
+		LOGGER.debug("所有bean加载完成,初始化config.properties全局变量");
 		Configurator.getInstance();
 	}
 }

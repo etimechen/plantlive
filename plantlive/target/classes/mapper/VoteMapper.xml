@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.etimechen.dao.IVoteDao">
+	<!-- 根据日期获取投票数 -->
+	<select id="selectVoteResultByDate" resultType="java.util.Map" parameterType="java.util.Map">
+		select 
+			COUNT(if(voteyesorno=1,1,null)) as yes,
+			COUNT(if(voteyesorno=0,1,null)) as no 
+		from 
+			vote 
+		where 
+			votedate = #{votedate,jdbcType=DATE}
+	</select>
 	<!-- 根据日期和IP统计投票数 -->
-	<select id="selectCountByDateAndIp" resultMap="java.lang.Integer" parameterType="java.util.Map">
+	<select id="selectVoteCountByIpAndDate" resultType="java.lang.Integer" parameterType="java.util.Map">
 		select 
 			count(*) 
 		from 
@@ -12,19 +22,32 @@
 		and 
 			voteip = INET_ATON(#{voteip,jdbcType=VARCHAR})
 	</select>
-	<insert id="insert" parameterType="java.util.Map">
+	<insert id="insertVoteSelective" parameterType="java.util.Map">
 		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
          insert into vote
-         	(  
-         	voteyesorno,
-         	voteip,
-         	votedate) 
-         values 
-         	(        
-         	#{voteyesorno},
-         	#{voteip},
-         	#{votedate})
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="voteyesorno != null" >				
+         		voteyesorno,
+			</if>
+			<if test="voteip != null" >
+         		voteip,
+			</if>
+			<if test="votedate != null" >
+         		votedate
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="voteyesorno != null" >
+         		#{voteyesorno,jdbcType=SMALLINT},
+			</if>
+			<if test="voteip != null" >
+         		INET_ATON(#{voteip,jdbcType=VARCHAR}),
+			</if>
+			<if test="votedate != null" >
+         		#{votedate,jdbcType=DATE}
+			</if>
+		</trim>
 	</insert>
 </mapper>

@@ -1,4 +1,4 @@
-package com.etimechen.component;
+package com.etimechen.component.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 public class PropertiesUtil {
 
-	private static final Logger logger = Logger.getLogger(PropertiesUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(PropertiesUtil.class);
 
 	private static PropertiesUtil propertiesUtil = null;
 	
@@ -15,14 +15,14 @@ public class PropertiesUtil {
 	
 
 	public PropertiesUtil() {
-		logger.info("读取配置文件");
+		LOGGER.info("读取配置文件");
 		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("/conf/config.properties");
 		try {
 			p = new Properties();
 			p.load(inputStream);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.info("读取配置文件失败");
+			LOGGER.info("读取配置文件失败");
 			e.printStackTrace();
 		}
 		

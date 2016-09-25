@@ -1,4 +1,4 @@
-package com.etimechen.util;
+package com.etimechen.component.util;
 
 public class BytesUtil {  
     /** 

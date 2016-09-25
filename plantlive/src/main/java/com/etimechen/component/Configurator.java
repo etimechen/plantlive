@@ -1,5 +1,7 @@
 package com.etimechen.component;
 
+import com.etimechen.component.util.PropertiesUtil;
+
 @SuppressWarnings("static-access")
 public class Configurator {
 	/**
@@ -7,18 +9,19 @@ public class Configurator {
 	 */
 	private static Configurator config = null;
 	private static PropertiesUtil propUtil = PropertiesUtil.getInstance();
-	public static final String excuteTime = propUtil.getProperty("excutetime");
+	public static final String EXCUTE_TIME = propUtil.getProperty("excutetime");
 	
 	public Configurator(){
-		Configurator.getExcutetime();
+		Configurator.getExcuteTime();
 	}
 	
 	public static Configurator getInstance(){
 		config = new Configurator();
 		return config;
 	}
-	
-	private static String getExcutetime() {
-		return excuteTime;
+
+	public static String getExcuteTime() {
+		return EXCUTE_TIME;
 	}
+	
 }
