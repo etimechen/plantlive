@@ -111,12 +111,28 @@ textarea {
 
 		<div class="row text-center">
 			<div style="padding-bottom: 10px">今天天气: <span id="weather"></span></div>
-			<div id="vote" class="votefont">投票</div>
-			<div class="votefontdiscribe">17:30统计结果并执行</div>
-			<button id="yes" type="button" class="btn btn-success btnrightmargin">浇水
-				(<span id="yesresult"></span>)</button>
-			<button id="no" type="button" class="btn btn-danger btnleftmargin">不浇
-				(<span id="noresult"></span>)</button>
+			<div id = "today" class="hide">
+				<div id="vote" class="votefont">投票</div>
+				<div class="votefontdiscribe"><span class="excutetime"></span>统计结果并执行</div>
+				<button id="yes" type="button" class="btn btn-success btnrightmargin">浇水
+					(<span id="yesresult"></span>)</button>
+				<button id="no" type="button" class="btn btn-danger btnleftmargin">不浇
+					(<span id="noresult"></span>)</button>
+			</div>
+			<div id = "todayover" class="hide">				
+				<div class="votefontdiscribe">今天投票已于<span class="excutetime"></span>结束</div>
+				<button id="yes" type="button" disabled="disabled" class="btn btn-success btnrightmargin">浇水
+					(<span id="yesresult"></span>)</button>
+				<button id="no" type="button" disabled="disabled" class="btn btn-danger btnleftmargin">不浇
+					(<span id="noresult"></span>)</button>
+			</div>
+			<div id = "tomorrow" class="hide">
+				<div id="vote" class="votefont">明天投票</div>
+				<button id="yes" type="button" class="btn btn-success btnrightmargin">浇水
+					(<span id="yesresult"></span>)</button>
+				<button id="no" type="button" class="btn btn-danger btnleftmargin">不浇
+					(<span id="noresult"></span>)</button>
+			</div>
 		</div>
 		<div style="height: 30px"></div>
 		<div id="commentcontainer" class="container">

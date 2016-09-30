@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.etimechen.component.util.GetWeatherInToday;
 import com.etimechen.service.IVoteService;
 
 public class VoteTest {
@@ -27,6 +28,7 @@ public class VoteTest {
 	public void vote(){
 		//Map<String, Object> paramMap = new HashMap<String, Object>();
 //		voteService.insertVote(paramMap);
+		System.out.println(GetWeatherInToday.getWeather());
 	}
 	
 	@Test

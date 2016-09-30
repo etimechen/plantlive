@@ -8,10 +8,11 @@ $(document).ready(function(){
 		$.unblockUI();
 	});
 	
-	var commentStart, commentLimit, commentCount;
+	var commentStart, commentLimit, commentCount, excuteTime;
 	commentStart = 0;
 	commentLimit = 10;
 	commentCount = 0;
+	excuteTime = "17:00";
 	
 	//日期格式化
 	Date.prototype.format = function(format) {
@@ -34,6 +35,33 @@ $(document).ready(function(){
 	              }
 	       }
 	       return format;
+	}
+	
+	//获取执行时间
+	function getExcuteTime(){
+		$.get("/plantlive/irrigation/getexcutetime",
+		  function(data,status){
+		  	if(data.success){
+		  		excuteTime = data.excutetime.toString();
+		  		$(".excutetime").html(excuteTime);
+		  		timeJudge();
+		  	}
+		 });
+	}
+	
+	function timeJudge(){
+		var nowDate, nowTime, exString, exDate, exTime;
+		nowDate = new Date();
+		nowTime = nowDate.getTime();
+		exString = nowDate.format("yyyy/MM/dd") + " " + excuteTime + ":00";
+		exDate = new Date(exString);
+		exTime = exDate.getTime();
+		if(nowTime >= exTime){
+			$("#todayover").removeClass("hide");
+			$("#tomorrow").removeClass("hide");
+		}else{
+			$("#today").removeClass("hide");
+		}
 	}
 	
 	//获取评论
@@ -104,10 +132,14 @@ $(document).ready(function(){
 		  function(data,status){
 		  	$.unblockUI();
 		  	if(data.success){
-		  		$("#yesresult").html(data.results.yes);
-		  		$("#noresult").html(data.results.no);
+		  		$("#today").children().children("#yesresult").html(data.results.today.yes);
+		  		$("#today").children().children("#noresult").html(data.results.today.no);
+		  		$("#todayover").children().children("#yesresult").html(data.results.today.yes);
+		  		$("#todayover").children().children("#noresult").html(data.results.today.no);
+		  		$("#tomorrow").children().children("#yesresult").html(data.results.tomorrow.yes);
+		  		$("#tomorrow").children().children("#noresult").html(data.results.tomorrow.no);
 		  	}else{
-		  		$.blockUI({message: '一天1票哦',css: {backgroundColor:'#000',lineHeight:'40px',color:'#fff',opacity:0.6,height:'40px',border:0 } });
+		  		$.blockUI({message: '一天1票哦',css: {backgroundColor:'#000',lineHeight:'40px',color:'#fff',opacity:0.8,height:'40px',border:0 } });
 				setTimeout(function(){$.unblockUI();},2000);
 		  	}
 		  });
@@ -118,11 +150,17 @@ $(document).ready(function(){
 		$.get("/plantlive/vote/selectvote",
 		  function(data,status){
 		  	if(data.success){
-		  		$("#yesresult").html(data.results.yes.toString());
-		  		$("#noresult").html(data.results.no.toString());  		
+		  		$("#today").children().children("#yesresult").html(data.results.today.yes);
+		  		$("#today").children().children("#noresult").html(data.results.today.no);
+		  		$("#todayover").children().children("#yesresult").html(data.results.today.yes);
+		  		$("#todayover").children().children("#noresult").html(data.results.today.no);
+		  		$("#tomorrow").children().children("#yesresult").html(data.results.tomorrow.yes);
+		  		$("#tomorrow").children().children("#noresult").html(data.results.tomorrow.no);		
 		  	}
 		  });
 	}
+	
+	getExcuteTime();
 	
 	//获取天气数据
 	$.getJSON("http://api.k780.com:88/?app=weather.today&weaid=101280601&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json&&jsoncallback=?",function(json){
@@ -142,18 +180,26 @@ $(document).ready(function(){
 		backgroundColor: '#fff',
 		opacity: 0.6
 	},
-	$('#yes').click(function() {
+	$('#today').children('#yes').click(function() {
 		$.blockUI({message: '<img src="images/loading.gif" />',css: {backgroundColor:null,border:0 } });
 		plantVote(1);
 	});
-	$('#no').click(function() {
+	$('#tomorrow').children('#yes').click(function() {
+		$.blockUI({message: '<img src="images/loading.gif" />',css: {backgroundColor:null,border:0 } });
+		plantVote(1);
+	});
+	$('#today').children('#no').click(function() {
+		$.blockUI({message: '<img src="images/loading.gif" />',css: {backgroundColor:null,border:0 } });
+		plantVote(0);
+	});
+	$('#tomorrow').children('#no').click(function() {
 		$.blockUI({message: '<img src="images/loading.gif" />',css: {backgroundColor:null,border:0 } });
 		plantVote(0);
 	});
 	$('#commentbtn').click(function() {
 		var content = $("#commentcontent").val();
 		if(content.trim()==''){
-			$.blockUI({message: '说点什么吧',css: {backgroundColor:'#000',lineHeight:'40px',color:'#fff',opacity:0.6,height:'40px',border:0 } });
+			$.blockUI({message: '说点什么吧',css: {backgroundColor:'#000',lineHeight:'40px',color:'#fff',opacity:0.8,height:'40px',border:0 } });
 			setTimeout(function(){$.unblockUI();},2000);
 		}else{
 			$.blockUI({message: '<img src="images/loading.gif" />',css: {backgroundColor:null,border:0 } });

@@ -46,7 +46,7 @@ public class CommentController extends BaseController {
 		// TODO Auto-generated method stub
 		String ipAddr = CommonUtil.getIpAddr(request);
 		Date date = new Date();		
-		paramMap.put("commentcity", GetCityByIp.GetAddressByIp(ipAddr));
+		paramMap.put("commentcity", GetCityByIp.getAddressByIp(ipAddr));
 		paramMap.put("commentip", ipAddr);
 		paramMap.put("commentdatetime", date);
 		return this.commentService.insertComment(paramMap);

@@ -1,5 +1,6 @@
 package com.etimechen.controller;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,29 +20,31 @@ import com.etimechen.service.IVoteService;
 
 /**
  * 投票-Controller
+ * 
  * @author chenliang
  *
  */
 @Controller
 @RequestMapping("/vote")
 public class VoteController extends BaseController {
-	
+
 	@Resource
 	private IVoteService voteService;
-	
+
 	/**
 	 * 投票
+	 * 
 	 * @param paramMap
 	 * @param request
 	 * @return Object
 	 */
 	@ResponseBody
-	@RequestMapping(value="/insertvote", method=RequestMethod.POST)
-	public Object insertvote(@RequestParam Map<String, Object> paramMap, HttpServletRequest request){
-		String ipAddr = CommonUtil.getIpAddr(request);		
+	@RequestMapping(value = "/insertvote", method = RequestMethod.POST)
+	public Object insertvote(@RequestParam Map<String, Object> paramMap, HttpServletRequest request) {
+		String ipAddr = CommonUtil.getIpAddr(request);
 		String excuteTime = Configurator.EXCUTE_TIME;
 		if (StringUtils.isEmpty(excuteTime)) {
-			//不设置值默认为下午5点
+			// 不设置值默认为下午5点
 			excuteTime = "17:00";
 		}
 		Date date = CommonUtil.getCurrentVoteDate(excuteTime);
@@ -49,25 +52,25 @@ public class VoteController extends BaseController {
 		paramMap.put("votedate", date);
 		return this.voteService.insertvote(paramMap);
 	}
-	
+
 	/**
 	 * 获取投票数
+	 * 
 	 * @param paramMap
 	 * @param request
 	 * @return Object
 	 */
 	@ResponseBody
-	@RequestMapping(value="/selectvote", method=RequestMethod.GET)
-	public Object selectvote(){	
+	@RequestMapping(value = "/selectvote", method = RequestMethod.GET)
+	public Object selectvote() {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		String excuteTime = Configurator.EXCUTE_TIME;
-		if (StringUtils.isEmpty(excuteTime)) {
-			//不设置值默认为下午5点
-			excuteTime = "17:00";
-		}
-		Date date = CommonUtil.getCurrentVoteDate(excuteTime);
-		paramMap.put("votedate", date);
+		Date todayDate = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(todayDate);
+		calendar.add(Calendar.DAY_OF_YEAR, 1);
+		paramMap.put("today", todayDate);
+		paramMap.put("tomorrow", calendar.getTime());
 		return this.voteService.selectvote(paramMap);
 	}
-	
+
 }

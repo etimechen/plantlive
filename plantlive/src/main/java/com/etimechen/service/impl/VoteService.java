@@ -1,5 +1,6 @@
 package com.etimechen.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.etimechen.component.constant.MessageConstant;
+import com.etimechen.component.util.GetWeatherInToday;
+import com.etimechen.dao.ILiverecordDao;
 import com.etimechen.dao.IVoteDao;
 import com.etimechen.service.IVoteService;
 
@@ -17,6 +20,9 @@ public class VoteService implements IVoteService {
 
 	@Resource
 	private IVoteDao voteDao;
+	
+	@Resource
+	private ILiverecordDao liverecordDao;
 
 	@Override
 	public Object insertvote(Map<String, Object> paramMap) {
@@ -30,7 +36,16 @@ public class VoteService implements IVoteService {
 			if(paramMap.get("voteyesorno")!=null){
 				this.voteDao.insertVoteSelective(paramMap);
 				Map<String, Object> resultMap = new HashMap<String, Object>();
-				resultMap = this.voteDao.selectVoteResultByDate((Date)paramMap.get("votedate"));
+				Date todayDate = new Date();
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(todayDate);
+				calendar.add(Calendar.DAY_OF_YEAR, 1);
+				Map<String, Object> todayMap = new HashMap<String, Object>();
+				Map<String, Object> tomorrowMap = new HashMap<String, Object>();
+				todayMap = this.voteDao.selectVoteResultByDate(todayDate);
+				tomorrowMap = this.voteDao.selectVoteResultByDate(calendar.getTime());
+				resultMap.put("today", todayMap);
+				resultMap.put("tomorrow", tomorrowMap);
 				map.put(MessageConstant.SUCCESS, true);
 				map.put(MessageConstant.RESULTS, resultMap);
 			}else{
@@ -46,9 +61,54 @@ public class VoteService implements IVoteService {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap = this.voteDao.selectVoteResultByDate((Date)paramMap.get("votedate"));
+		Map<String, Object> todayMap = new HashMap<String, Object>();
+		Map<String, Object> tomorrowMap = new HashMap<String, Object>();
+		todayMap = this.voteDao.selectVoteResultByDate((Date)paramMap.get("today"));
+		tomorrowMap = this.voteDao.selectVoteResultByDate((Date)paramMap.get("tomorrow"));
+		resultMap.put("today", todayMap);
+		resultMap.put("tomorrow", tomorrowMap);
 		map.put(MessageConstant.SUCCESS, true);
 		map.put(MessageConstant.RESULTS, resultMap);
 		return map;
+	}
+
+	/**
+	 * 统计投票结果
+	 */
+	@Override
+	public Boolean statisticsVoteResult() {
+		// TODO Auto-generated method stub
+		Date date = new Date();
+		Boolean result = false;
+		Map<String, Object> voteResultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		voteResultMap = this.voteDao.selectVoteResultByDate(date);
+		String yes = voteResultMap.get("yes").toString();
+		String no = voteResultMap.get("no").toString();
+		int yescount = 0;
+		int nocount = 0;
+		if(!yes.isEmpty()){
+			yescount = Integer.valueOf(yes);
+		}
+		if(!no.isEmpty()){
+			nocount = Integer.valueOf(no);
+		}
+		if(yescount > nocount){
+			result = true;
+		}else if(yescount == nocount){
+			String weather = GetWeatherInToday.getWeather();
+			if(!weather.isEmpty()){
+				if(weather.contains("晴")){
+					result = true;
+				}
+			}
+		}
+		resultMap.put("voteyes", yescount);
+		resultMap.put("voteno", nocount);
+		resultMap.put("voteresult", result);
+		resultMap.put("isexecute", result);
+		resultMap.put("recorddatetime", date);
+		this.liverecordDao.insertLiverecordSelective(resultMap);
+		return result;
 	}
 }

@@ -20,7 +20,7 @@ public class GetCityByIp {
 	 * @param IP
 	 * @return
 	 */
-	public static String GetAddressByIp(String IP) {
+	public static String getAddressByIp(String IP) {
 		String resout = "";
 		try {
 			String str = getJsonContent("http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js&ip=" + IP);
@@ -54,7 +54,7 @@ public class GetCityByIp {
 			// 获取相应码
 			int respCode = httpConn.getResponseCode();
 			if (respCode == 200) {
-				return ConvertStream2Json(httpConn.getInputStream());
+				return convertStream2Json(httpConn.getInputStream());
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -64,7 +64,7 @@ public class GetCityByIp {
 		return "";
 	}
 
-	private static String ConvertStream2Json(InputStream inputStream) {
+	private static String convertStream2Json(InputStream inputStream) {
 		String jsonStr = "";
 		// ByteArrayOutputStream相当于内存输出流
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

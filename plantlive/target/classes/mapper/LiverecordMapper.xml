@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.etimechen.dao.ILiverecordDao">
-
+	<insert id="insertLiverecordSelective" parameterType="java.util.Map">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+         insert into liverecord
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="voteyes != null" >				
+         		voteyes,
+			</if>
+			<if test="voteno != null" >
+         		voteno,
+			</if>
+			<if test="voteresult != null" >
+         		voteresult,
+			</if>
+			<if test="isexecute != null" >
+         		isexecute,
+			</if>
+			<if test="recorddatetime != null" >
+         		recorddatetime
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="voteyes != null" >
+         		#{voteyes,jdbcType=INTEGER},
+			</if>
+			<if test="voteno != null" >
+         		#{voteno,jdbcType=INTEGER},
+			</if>
+			<if test="voteresult != null" >
+         		#{voteresult,jdbcType=SMALLINT},
+			</if>
+			<if test="isexecute != null" >
+         		#{isexecute,jdbcType=SMALLINT},
+			</if>
+			<if test="recorddatetime != null" >
+         		#{recorddatetime,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+	</insert>
 </mapper>
