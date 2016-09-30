@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.etimechen.component.constant.MessageConstant;
@@ -14,7 +15,7 @@ import com.etimechen.service.IVoteService;
 @Service
 public class VoteService implements IVoteService {
 
-	@Autowired
+	@Resource
 	private IVoteDao voteDao;
 
 	@Override
@@ -37,6 +38,17 @@ public class VoteService implements IVoteService {
 				map.put(MessageConstant.MSG, "param error");
 			}
 		}
+		return map;
+	}
+
+	@Override
+	public Object selectvote(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap = this.voteDao.selectVoteResultByDate((Date)paramMap.get("votedate"));
+		map.put(MessageConstant.SUCCESS, true);
+		map.put(MessageConstant.RESULTS, resultMap);
 		return map;
 	}
 }

@@ -1,43 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-	<meta name="viewport" content="width=320, initial-scale=1"/>
-	<title>jsmpeg streaming</title>
-	<style type="text/css">
-		body {
-			background: #333;
-			text-align: center;
-			margin-top: 10%;
-		}
-		#videoCanvas {
-			/* Always stretch the canvas to 640x480, regardless of its
-			internal size. */
-			width: 320px;
-			height: 240px;
-		}
-	</style>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>植播</title>
+
+<!-- Bootstrap -->
+<!-- CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 30px;
+}
+
+.theme-showcase>p>.btn {
+	margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+	width: auto;
+}
+
+.btnleftmargin {
+	margin-left: 20px;
+}
+
+.btnrightmargin {
+	margin-right: 20px;
+}
+
+.comment {
+	background-color: #F3F3F3;
+	word-break: break-all;
+	margin: 10px;
+}
+
+.commentp {
+	margin: 10px;
+}
+
+.leftpaddingzero {
+	padding-left: 0px;
+}
+
+.rightpaddingzero {
+	padding-right: 0px;
+}
+
+textarea {
+	resize: none;
+}
+
+.votefont {
+	font-size: 18px;
+}
+
+.votefontdiscribe {
+	color: #C1C1C1;
+	font-size: 12px;
+}
+</style>
 </head>
 <body>
-	<!-- The Canvas size specified here is the "initial" internal resolution. jsmpeg will
-		change this internal resolution to whatever the source provides. The size the
-		canvas is displayed on the website is dictated by the CSS style.
-	-->
-	<canvas id="videoCanvas" width="320" height="240">
-		<p>
-			Please use a browser that supports the Canvas Element, like
-			<a href="http://www.google.com/chrome">Chrome</a>,
-			<a href="http://www.mozilla.com/firefox/">Firefox</a>,
-			<a href="http://www.apple.com/safari/">Safari</a> or Internet Explorer 10
-		</p>
-	</canvas>
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<div class="navbar-brand">PlantLive</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">植播</a></li>
+					<li><a href="#about">介绍</a></li>
+					<li><a href="#contact">打赏</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container" role="main">
+		<div class="container">
+			<div class="row text-center">
+				<canvas id="videoCanvas">
+					你的浏览器不支持HTML5
+				</canvas>
+			</div>
+		</div>
+
+		<div class="row text-center">
+			<div style="padding-bottom: 10px">今天天气: <span id="weather"></span></div>
+			<div id="vote" class="votefont">投票</div>
+			<div class="votefontdiscribe">17:30统计结果并执行</div>
+			<button id="yes" type="button" class="btn btn-success btnrightmargin">浇水
+				(<span id="yesresult"></span>)</button>
+			<button id="no" type="button" class="btn btn-danger btnleftmargin">不浇
+				(<span id="noresult"></span>)</button>
+		</div>
+		<div style="height: 30px"></div>
+		<div id="commentcontainer" class="container">
+
+		</div>
+	</div>
+	<div class="container navbar-fixed-bottom">
+		<div class="row">
+			<div class="col-xs-9 rightpaddingzero">
+				<textarea id="commentcontent" class="form-control" rows="1" placeholder="评论"></textarea>
+			</div>
+			<div class="col-xs-3 leftpaddingzero">
+				<button id="commentbtn" class="btn btn-default btn-block">发表</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- jQuery-->
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<!-- Bootstrap JavaScript -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="blockUI.js"></script>
+	<script type="text/javascript" src="js.js"></script>
 	<script type="text/javascript" src="jsmpg.js"></script>
 	<script type="text/javascript">
 		// Setup the WebSocket connection and start the player
 		//var client = new WebSocket( 'ws://192.168.1.3:8084/websocket' );
-		var client = new WebSocket( 'ws://192.168.1.3:8080/plantlive/websocket' );
+		var client = new WebSocket(
+				'ws://etimechen.iok.la:8088/plantlive/websocket');
 
 		var canvas = document.getElementById('videoCanvas');
-		var player = new jsmpeg(client, {canvas:canvas});
+		var player = new jsmpeg(client, {
+			canvas : canvas
+		});
 	</script>
 </body>
 </html>

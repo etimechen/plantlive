@@ -6,12 +6,14 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 	http://www.springframework.org/schema/websocket
 	http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
 	
@@ -21,14 +23,25 @@
 	<!-- 扫描controller（controller层注入） -->
 	<context:component-scan base-package="com.etimechen.controller"/>
 	<context:component-scan base-package="com.etimechen.component"/>
-	<context:component-scan base-package="com.etimechen.websocket"/>	
+	<context:component-scan base-package="com.etimechen.websocket"/>
+	<context:component-scan base-package="com.etimechen.task"/>
+	
+	<!-- 定时任务 start -->
+	<task:scheduled-tasks>
+		<task:scheduled ref="task" method="irrigation" cron="0 */1 * * * ?"/>		
+	</task:scheduled-tasks>
+	<!-- 定时任务 end -->
+	
+	<!-- websocket start-->	
 	<bean id="websocket" class="com.etimechen.websocket.MyWebSocketHandle"/>
-	<websocket:handlers>  
+	<websocket:handlers allowed-origins="*">  
 		<websocket:mapping path="/websocket" handler="websocket"/>  
 		<websocket:handshake-interceptors>  
 			<bean class="com.etimechen.websocket.HandshakeInterceptor"/>  
 		</websocket:handshake-interceptors>  
-	</websocket:handlers> 
+	</websocket:handlers>
+	<!-- websocket end --> 
+	
 	<!-- json -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">
@@ -45,6 +58,7 @@
 		</property>
 	</bean>
 	<mvc:default-servlet-handler />
+	
 	<!-- 全局异常配置 start -->     
 	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">         
 		<property name="statusCodes">     

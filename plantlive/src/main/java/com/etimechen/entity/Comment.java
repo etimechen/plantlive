@@ -6,7 +6,7 @@ public class Comment {
 
     private Integer id;
 
-    private Integer commentip;
+    private Long commentip;
 
     private Date commentdatetime;
 
@@ -20,11 +20,11 @@ public class Comment {
         this.id = id;
     }
 
-    public Integer getCommentip() {
+    public Long getCommentip() {
         return commentip;
     }
 
-    public void setCommentip(Integer commentip) {
+    public void setCommentip(Long commentip) {
         this.commentip = commentip;
     }
 

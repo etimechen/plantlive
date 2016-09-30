@@ -1,5 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.etimechen.dao.CommentMapper">
-
+<mapper namespace="com.etimechen.dao.ICommentDao">
+	<!-- 分页查询 -->
+	<select id="selectCommentByLimit" resultType="java.util.Map" parameterType="java.util.Map">
+		select 
+			commentip, commentcity, commentcontent, commentdatetime
+		from 
+			comment 
+		order by id desc
+		<if test="start != null and limit != null">
+			limit #{start,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 分页查询Count -->
+	<select id="selectCommentCountByLimit" resultType="java.lang.Integer">
+		select 
+			count(*)
+		from 
+			comment
+	</select>
+	<insert id="insertCommentSelective" parameterType="java.util.Map">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+         insert into comment
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="commentip != null" >				
+         		commentip,
+			</if>
+			<if test="commentcity != null" >
+         		commentcity,
+			</if>
+			<if test="commentcontent != null" >
+         		commentcontent,
+			</if>
+			<if test="commentdatetime != null" >
+         		commentdatetime
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="commentip != null" >
+         		INET_ATON(#{commentip,jdbcType=VARCHAR}),
+			</if>
+			<if test="commentcity != null" >
+         		#{commentcity,jdbcType=VARCHAR},
+			</if>
+			<if test="commentcontent != null" >
+         		#{commentcontent,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="commentdatetime != null" >
+         		#{commentdatetime,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+	</insert>
 </mapper>

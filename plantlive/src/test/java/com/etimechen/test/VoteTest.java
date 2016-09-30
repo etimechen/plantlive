@@ -25,7 +25,7 @@ public class VoteTest {
 	
 	@Test
 	public void vote(){
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		//Map<String, Object> paramMap = new HashMap<String, Object>();
 //		voteService.insertVote(paramMap);
 	}
 	

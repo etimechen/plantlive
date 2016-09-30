@@ -34,6 +34,14 @@ public class MethodParamInterceptor implements HandlerInterceptor {
 		Map<String, String[]> map;
 		Map<String, Object> resultMap;
 		String requestMethod = request.getMethod().toLowerCase();
+		String requestURI = request.getRequestURI();
+		//忽略http视频流拦截
+		String[] ignoreUrl = {"/streamconvert"};
+		for(String ignoreUrlStr : ignoreUrl){
+			if(requestURI.contains(ignoreUrlStr)){
+				return true;
+			}
+		}
 		if("post".equals(requestMethod) || "put".equals(requestMethod) || "delete".equals(requestMethod)){
 			map = request.getParameterMap();
 			if(map.isEmpty()){
@@ -45,6 +53,5 @@ public class MethodParamInterceptor implements HandlerInterceptor {
 		}
 		return true;
 	}
-
 
 }

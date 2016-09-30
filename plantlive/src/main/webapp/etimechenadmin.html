@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no">
+<title>植播调试</title>
+<style type="text/css">
+	.btn{
+		width:120px;
+		height:40px;
+		font-size:16px;
+		-webkit-appearance: button;
+	}
+</style>
+</head>
+<body>
+
+	<canvas id="videoCanvas">
+		你的浏览器不支持HTML5
+	</canvas>
+	
+	<input id="start" class="btn" type="button" value="开始浇水"/>
+	<input id="stop" class="btn" type="button" value="停止浇水"/>
+	<input id="dooneperiod" class="btn" type="button" value="执行一个周期">
+	<input id="checkcode" type="password"/>
+	
+	<!-- jQuery-->
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="jsmpg.js"></script>
+	<script type="text/javascript">
+		// Setup the WebSocket connection and start the player
+		//var client = new WebSocket( 'ws://192.168.1.3:8084/websocket' );
+		var client = new WebSocket(
+				'ws://etimechen.iok.la:8088/plantlive/websocket');
+
+		var canvas = document.getElementById('videoCanvas');
+		var player = new jsmpeg(client, {
+			canvas : canvas
+		});
+		
+		//灌溉
+		function irrigation(startorstop){
+			var checkcode = $("#checkcode").val();
+			$.post("/plantlive/irrigation/doirrigate",
+			  {
+			    startorstop:startorstop,
+			    checkcode:checkcode
+			  });
+		}
+		$('#start').click(function() {
+			irrigation(1);
+		});
+		$('#stop').click(function() {
+			irrigation(0);
+		});
+		$('#dooneperiod').click(function() {
+			irrigation(2);
+		});
+	</script>
+</body>
+</html>

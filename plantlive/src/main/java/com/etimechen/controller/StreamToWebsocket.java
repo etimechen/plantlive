@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.socket.BinaryMessage;
 
+import com.etimechen.component.constant.ConfigConstant;
 import com.etimechen.websocket.MyWebSocketHandle;
 
 @Controller
@@ -21,7 +22,8 @@ public class StreamToWebsocket extends BaseController {
 
 	@Resource
 	private MyWebSocketHandle myWebSocketHandle;
-	//private static final Logger logger = Logger.getLogger(StreamToWebsocket.class);
+	// private static final Logger logger =
+	// Logger.getLogger(StreamToWebsocket.class);
 
 	@RequestMapping("/streamconvert")
 	@ResponseBody
@@ -31,29 +33,17 @@ public class StreamToWebsocket extends BaseController {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream is = null;
 		is = request.getInputStream();
-		byte[] byteChunk = new byte[512]; // Or whatever size you want to
-											// read in at a time.
+		byte[] byteChunk = new byte[ConfigConstant.BYTE_SIZE]; 
 		int n;
-		int i = 1;
-		while (i == 1) {
-			n = is.read(byteChunk);
-			if(n > 0){
-				baos.write(byteChunk, 0, n);
-				//logger.debug(n);
-				if(n < 512){
-					bm = new BinaryMessage(baos.toByteArray());
-					myWebSocketHandle.sendMessageToUsers(bm);
-					baos.reset();
-				}
+		while ((n = is.read(byteChunk)) > -1) {
+			baos.write(byteChunk, 0, n);
+			if (n < ConfigConstant.BYTE_SIZE) {
+				bm = new BinaryMessage(baos.toByteArray());
+				myWebSocketHandle.sendMessageToUsers(bm);
+				baos.reset();
 			}
-			
 		}
-
-//		while (i == 1) {
-//			is.read(byteChunk);
-//			bm = new BinaryMessage(byteChunk);
-//			myWebSocketHandle.sendMessageToUsers(bm);
-//		}
-
+		baos.close();
+		is.close();
 	}
 }

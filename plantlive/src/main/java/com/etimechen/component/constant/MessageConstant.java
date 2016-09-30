@@ -13,5 +13,7 @@ public class MessageConstant {
 	
 	public static final String RESULTS = "results";
 	
+	public static final String RESULTS_COUNT = "resultsCount";
+	
 	public static final String PARAMNULL = "param is null";
 }
