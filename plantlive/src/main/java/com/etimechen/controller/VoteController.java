@@ -50,7 +50,7 @@ public class VoteController extends BaseController {
 		Date date = CommonUtil.getCurrentVoteDate(excuteTime);
 		paramMap.put("voteip", ipAddr);
 		paramMap.put("votedate", date);
-		return this.voteService.insertvote(paramMap);
+		return this.voteService.insertVote(paramMap);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class VoteController extends BaseController {
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		paramMap.put("today", todayDate);
 		paramMap.put("tomorrow", calendar.getTime());
-		return this.voteService.selectvote(paramMap);
+		return this.voteService.selectVote(paramMap);
 	}
 
 }

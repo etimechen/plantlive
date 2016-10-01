@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.etimechen.component.Configurator;
 import com.etimechen.component.Irrigation;
 import com.etimechen.component.constant.MessageConstant;
+import com.etimechen.component.util.CommonUtil;
 
 @Controller
 @RequestMapping("/irrigation")
@@ -35,7 +36,7 @@ public class IrrigationController extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="/getexcutetime", method=RequestMethod.GET)
+	@RequestMapping(value="/getconfigtime", method=RequestMethod.GET)
 	public Object doIrrigate(){
 		String excuteTime = Configurator.EXCUTE_TIME;
 		if (StringUtils.isEmpty(excuteTime)) {
@@ -45,6 +46,7 @@ public class IrrigationController extends BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(MessageConstant.SUCCESS, true);
 		map.put("excutetime", excuteTime);
+		map.put("timedifferent", CommonUtil.getTimeDifferent(excuteTime));
 		return map;
 	}
 }

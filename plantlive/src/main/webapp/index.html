@@ -3,9 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, user-scalable=no">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <title>植播</title>
 
 <!-- Bootstrap -->
@@ -43,7 +41,9 @@ body {
 .btnrightmargin {
 	margin-right: 20px;
 }
-
+#todayover{
+	margin-bottom: 10px;
+}
 .comment {
 	background-color: #F3F3F3;
 	word-break: break-all;
@@ -67,18 +67,21 @@ textarea {
 }
 
 .votefont {
-	font-size: 18px;
+	font-size: 20px;
 }
 
 .votefontdiscribe {
 	color: #C1C1C1;
 	font-size: 12px;
 }
+#commentloading{
+	height:30px;
+}
 </style>
 </head>
 <body>
 	<!-- Navbar -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed"
@@ -114,6 +117,7 @@ textarea {
 			<div id = "today" class="hide">
 				<div id="vote" class="votefont">投票</div>
 				<div class="votefontdiscribe"><span class="excutetime"></span>统计结果并执行</div>
+				<div class="countdown"></div>
 				<button id="yes" type="button" class="btn btn-success btnrightmargin">浇水
 					(<span id="yesresult"></span>)</button>
 				<button id="no" type="button" class="btn btn-danger btnleftmargin">不浇
@@ -121,13 +125,14 @@ textarea {
 			</div>
 			<div id = "todayover" class="hide">				
 				<div class="votefontdiscribe">今天投票已于<span class="excutetime"></span>结束</div>
-				<button id="yes" type="button" disabled="disabled" class="btn btn-success btnrightmargin">浇水
+				<button id="yes" type="button" disabled="disabled" class="btn btn-default btn-sm btnrightmargin">浇水
 					(<span id="yesresult"></span>)</button>
-				<button id="no" type="button" disabled="disabled" class="btn btn-danger btnleftmargin">不浇
+				<button id="no" type="button" disabled="disabled" class="btn btn-default btn-sm btnleftmargin">不浇
 					(<span id="noresult"></span>)</button>
 			</div>
 			<div id = "tomorrow" class="hide">
-				<div id="vote" class="votefont">明天投票</div>
+				<div id="vote" class="votefont">为明天投票</div>
+				<div class="countdown"></div>
 				<button id="yes" type="button" class="btn btn-success btnrightmargin">浇水
 					(<span id="yesresult"></span>)</button>
 				<button id="no" type="button" class="btn btn-danger btnleftmargin">不浇
@@ -161,9 +166,7 @@ textarea {
 	<script type="text/javascript">
 		// Setup the WebSocket connection and start the player
 		//var client = new WebSocket( 'ws://192.168.1.3:8084/websocket' );
-		var client = new WebSocket(
-				'ws://etimechen.iok.la:8088/plantlive/websocket');
-
+		var client = new WebSocket('ws://etimechen.iok.la:8088/plantlive/websocket');
 		var canvas = document.getElementById('videoCanvas');
 		var player = new jsmpeg(client, {
 			canvas : canvas

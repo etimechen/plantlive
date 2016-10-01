@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.etimechen.component.util.CommonUtil;
-import com.etimechen.component.util.GetCityByIp;
 import com.etimechen.service.ICommentService;
 
 @Controller
@@ -46,7 +45,7 @@ public class CommentController extends BaseController {
 		// TODO Auto-generated method stub
 		String ipAddr = CommonUtil.getIpAddr(request);
 		Date date = new Date();		
-		paramMap.put("commentcity", GetCityByIp.getAddressByIp(ipAddr));
+		paramMap.put("commentcity", CommonUtil.getAddressByIp(ipAddr));
 		paramMap.put("commentip", ipAddr);
 		paramMap.put("commentdatetime", date);
 		return this.commentService.insertComment(paramMap);

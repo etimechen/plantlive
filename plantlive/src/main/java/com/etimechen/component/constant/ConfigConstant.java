@@ -16,4 +16,7 @@ public class ConfigConstant {
 	public static final int PAGE_LIMIT = 10;
 	
 	public static final long IRRIGATION_MILLIS = 10000;
+	
+	public static final String HX = "火星";
+	
 }

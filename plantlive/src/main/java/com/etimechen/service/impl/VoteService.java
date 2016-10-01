@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.etimechen.component.constant.MessageConstant;
-import com.etimechen.component.util.GetWeatherInToday;
+import com.etimechen.component.util.CommonUtil;
 import com.etimechen.dao.ILiverecordDao;
 import com.etimechen.dao.IVoteDao;
 import com.etimechen.service.IVoteService;
@@ -25,7 +25,7 @@ public class VoteService implements IVoteService {
 	private ILiverecordDao liverecordDao;
 
 	@Override
-	public Object insertvote(Map<String, Object> paramMap) {
+	public Object insertVote(Map<String, Object> paramMap) {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Integer voteCount = this.voteDao.selectVoteCountByIpAndDate(paramMap);
@@ -57,7 +57,7 @@ public class VoteService implements IVoteService {
 	}
 
 	@Override
-	public Object selectvote(Map<String, Object> paramMap) {
+	public Object selectVote(Map<String, Object> paramMap) {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -96,7 +96,7 @@ public class VoteService implements IVoteService {
 		if(yescount > nocount){
 			result = true;
 		}else if(yescount == nocount){
-			String weather = GetWeatherInToday.getWeather();
+			String weather = CommonUtil.getWeather();
 			if(!weather.isEmpty()){
 				if(weather.contains("晴")){
 					result = true;
